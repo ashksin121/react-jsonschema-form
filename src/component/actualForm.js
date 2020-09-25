@@ -1,8 +1,8 @@
-import React from "react";
+import React, {useState} from "react";
 import Form from "@rjsf/material-ui";
+import TextField from '@material-ui/core/TextField';
 
 const schema = {
-    "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
     "properties": {
     "setup": {
@@ -177,12 +177,26 @@ const schema = {
 // };
 const log = (type) => console.log.bind(console, type);
 export default function Home() {
-  return (
-    <div style={{width: "50%", margin: "auto", paddingTop: "50px"}}>
-      <Form schema={schema}
-        onChange={log("changed")}
-        onSubmit={log("submitted")}
-        onError={log("errors")} />
-    </div>
-  );
+    const [formData, setFormData] = useState(null);
+    const handleSubmit = () => {
+        console.log(formData)
+        document.getElementById("formResponse").value = JSON.stringify({"formData": formData}, null, 4)
+    }
+    return (
+        <div style={{width: "50%", margin: "auto", padding: "50px 0"}}>
+        <Form schema={schema}
+            formData={formData}
+            onChange={e=>setFormData(e.formData)}
+            onSubmit={handleSubmit}
+            onError={log("errors")} />
+        <TextField
+        style={{marginTop: "20px"}}
+          id="formResponse"
+          fullWidth
+          multiline
+          rows={50}
+          variant="outlined"
+        />
+        </div>
+    );
 }
