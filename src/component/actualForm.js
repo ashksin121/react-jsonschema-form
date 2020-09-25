@@ -19,17 +19,24 @@ const schema = {
                 "query": {
                   "type": "string"
                 },
-                "db_type": {
+                "db_url": {
                   "type": "string"
                 },
-                "db_name": {
+                "db_password": {
+                  "type": "string"
+                },
+                "db_username": {
+                  "type": "string"
+                },
+                "db_type": {
                   "type": "string"
                 }
               },
               "required": [
                 "query",
-                "db_type",
-                "db_name"
+                "db_url",
+                "db_username",
+                "db_type"
               ]
             }
           },
@@ -41,7 +48,7 @@ const schema = {
       },
       "phases": {
         "type": "array",
-        "items":{
+        "items": {
           "type": "object",
           "oneOf": [
             {
@@ -52,6 +59,9 @@ const schema = {
                 "curl_data": {
                   "type": "object",
                   "properties": {
+                    "host": {
+                      "type": "string"
+                    },
                     "path": {
                       "type": "string"
                     },
@@ -67,6 +77,7 @@ const schema = {
                     }
                   },
                   "required": [
+                    "host",
                     "path",
                     "header_appender",
                     "body_appender"
@@ -82,17 +93,25 @@ const schema = {
                     "query": {
                       "type": "string"
                     },
-                    "db_type": {
+                    "db_url": {
                       "type": "string"
                     },
-                    "db_name": {
+                    "db_password": {
+                      "type": "string"
+                    },
+                    "db_username": {
+                      "type": "string"
+                    },
+                    "db_type": {
                       "type": "string"
                     }
                   },
                   "required": [
                     "query",
-                    "db_type",
-                    "db_name"
+                    "db_url",
+                    "db_password",
+                    "db_username",
+                    "db_type"
                   ]
                 }
               },
@@ -153,17 +172,25 @@ const schema = {
                 "query": {
                   "type": "string"
                 },
-                "db_type": {
+                "db_url": {
                   "type": "string"
                 },
-                "db_name": {
+                "db_password": {
+                  "type": "string"
+                },
+                "db_username": {
+                  "type": "string"
+                },
+                "db_type": {
                   "type": "string"
                 }
               },
               "required": [
                 "query",
-                "db_type",
-                "db_name"
+                "db_url",
+                "db_password",
+                "db_username",
+                "db_type"
               ]
             }
           },
@@ -174,8 +201,7 @@ const schema = {
         }
       }
     },
-    "required": [
-    ]
+    "required": []
   };
 const log = (type) => console.log.bind(console, type);
 export default function Home() {
