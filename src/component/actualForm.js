@@ -1,188 +1,200 @@
-import React from "react";
+import React, {uaeState, useState} from "react";
 import Form from "@rjsf/material-ui";
+import axios from 'axios';
 
 const schema = {
-    "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
     "properties": {
-    "setup": {
+      "setup": {
         "type": "array",
-        "items": 
-        {
-            "type": "object",
-            "properties": {
+        "items": {
+          "type": "object",
+          "properties": {
             "ref": {
-                "type": "string"
-            },
-            "result_validation": {
-                "type": "string"
+              "type": "string"
             },
             "queryData": {
-                "type": "object",
-                "properties": {
+              "type": "object",
+              "properties": {
                 "query": {
-                    "type": "string"
+                  "type": "string"
                 },
-                "db_url": {
-                    "type": "string"
+                "db_type": {
+                  "type": "string"
                 },
-                "user_name": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
+                "db_name": {
+                  "type": "string"
                 }
-                },
-                "required": [
+              },
+              "required": [
                 "query",
-                "db_url",
-                "user_name",
-                "password"
-                ]
+                "db_type",
+                "db_name"
+              ]
             }
-            },
-            "required": [
+          },
+          "required": [
             "ref",
-            "result_validation",
             "queryData"
-            ]
+          ]
         }
-        
-    },
-    "phases": {
+      },
+      "phases": {
         "type": "array",
-        "items": 
-        {
-            "type": "object",
-            "properties": {
-            "ref": {
-                "type": "string"
-            },
-            "node_type": {
-                "type": "string"
-            },
-            "logical_checks": {
-                "type": "string"
-            },
-            "transition_time": {
-                "type": "integer"
-            },
-            "result_validation": {
-                "type": "string"
-            },
-            "curl_data": {
-                "type": "object",
-                "properties": {
-                "api": {
-                    "type": "string"
+        "items":{
+          "type": "object",
+          "oneOf": [
+            {
+              "properties": {
+                "result_validation": {
+                  "type": "string"
                 },
-                "header_appenders": {
-                    "type": "object",
-                    "properties": {
-                    "a": {
-                        "type": "string"
-                    }
+                "curl_data": {
+                  "type": "object",
+                  "properties": {
+                    "path": {
+                      "type": "string"
                     },
-                    "required": [
-                    "a"
-                    ]
-                },
-                "body_appenders": {
-                    "type": "object",
-                    "properties": {
-                    "b": {
+                    "header_appender": {
+                      "additionalProperties": {
                         "type": "string"
-                    }
+                      }
                     },
-                    "required": [
-                    "b"
-                    ]
+                    "body_appender": {
+                      "additionalProperties": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "path",
+                    "header_appender",
+                    "body_appender"
+                  ]
                 }
-                },
-                "required": [
-                "api",
-                "header_appenders",
-                "body_appenders"
-                ]
-            }
+              }
             },
-            "required": [
-            "ref",
-            "node_type",
-            "logical_checks",
-            "transition_time",
-            "result_validation",
-            "curl_data"
-            ]
+            {
+              "properties": {
+                "query_data": {
+                  "type": "object",
+                  "properties": {
+                    "query": {
+                      "type": "string"
+                    },
+                    "db_type": {
+                      "type": "string"
+                    },
+                    "db_name": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "query",
+                    "db_type",
+                    "db_name"
+                  ]
+                }
+              },
+              "required": [
+                "query_data"
+              ]
+            },
+            {
+              "properties": {
+                "workflow-name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "workflow-name"
+              ]
+            }
+          ],
+          "allOf": [
+            {
+              "properties": {
+                "ref": {
+                  "type": "string"
+                },
+                "node_type": {
+                  "type": "string"
+                },
+                "logical_checks": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "properties": {
+                      "ref": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "transition_time": {
+                  "type": "integer"
+                }
+              }
+            }
+          ]
         }
-        
-    },
-    "tear_down": {
+      },
+      "tear_down": {
         "type": "array",
-        "items": 
-        {
-            "type": "object",
-            "properties": {
+        "items": {
+          "type": "object",
+          "properties": {
             "ref": {
-                "type": "string"
+              "type": "string"
             },
             "queryData": {
-                "type": "object",
-                "properties": {
+              "type": "object",
+              "properties": {
                 "query": {
-                    "type": "string"
+                  "type": "string"
                 },
-                "db_url": {
-                    "type": "string"
+                "db_type": {
+                  "type": "string"
                 },
-                "user_name": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
+                "db_name": {
+                  "type": "string"
                 }
-                },
-                "required": [
+              },
+              "required": [
                 "query",
-                "db_url",
-                "user_name",
-                "password"
-                ]
+                "db_type",
+                "db_name"
+              ]
             }
-            },
-            "required": [
+          },
+          "required": [
             "ref",
             "queryData"
-            ]
+          ]
         }
-    }
+      }
     },
     "required": [
-    "setup",
-    "phases",
-    "tear_down"
     ]
-}
-
-// const schema = {
-//     type: "array",
-//     items: {
-//       type: "object",
-//       properties: {
-//           name: {
-//               type: "string"
-//           }
-//       }
-//     }
-// };
+  };
 const log = (type) => console.log.bind(console, type);
 export default function Home() {
-  return (
-    <div style={{width: "50%", margin: "auto", paddingTop: "50px"}}>
-      <Form schema={schema}
-        onChange={log("changed")}
-        onSubmit={log("submitted")}
-        onError={log("errors")} />
-    </div>
-  );
+    const [formData, setFormData] = useState(null);
+    return (
+        <div style={{width: "50%", margin: "auto", paddingTop: "50px"}}>
+        <Form schema={schema}
+            formData={formData}
+            onChange={e=>setFormData(e.formData)}
+            onSubmit={() => {
+                axios.post("http://localhost:8080/nightswatch", formData)
+                .then(res => {
+                    console.log(res);
+                })
+                .catch(e => {
+                    console.log(e);
+                })
+            }}
+            onError={log("errors")} />
+        </div>
+    );
 }
