@@ -1,6 +1,7 @@
 import React, {uaeState, useState} from "react";
 import Form from "@rjsf/material-ui";
 import axios from 'axios';
+import TextField from '@material-ui/core/TextField'
 
 const schema = {
     "type": "object",
@@ -206,13 +207,25 @@ const schema = {
 const log = (type) => console.log.bind(console, type);
 export default function Home() {
     const [formData, setFormData] = useState(null);
+    const [workFlowName, setWorkFlowName] = useState("");
     return (
         <div style={{width: "50%", margin: "auto", paddingTop: "50px"}}>
+        <TextField 
+        fullWidth
+        label="Workflow Name"
+        value={workFlowName}
+        onChange={(e) => setWorkFlowName(e.target.value)}
+        />
         <Form schema={schema}
             formData={formData}
             onChange={e=>setFormData(e.formData)}
             onSubmit={() => {
-                axios.post("http://localhost:8080/nightswatch", formData)
+                var data = {
+                    workflow_name: workFlowName,
+                    flow: formData
+                }
+                // axios.post("http://localhost:8080/upload_workflow", data)
+                axios.post("http://localhost:8080/nightswatch", data)
                 .then(res => {
                     console.log(res);
                 })
